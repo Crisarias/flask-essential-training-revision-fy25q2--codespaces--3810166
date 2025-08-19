@@ -28,17 +28,22 @@ def form():
     form = HealthDataForm()
     if form.validate_on_submit():
         # Process form data here
-        date=form.date.data
-        exercise = form.exercise.data
-        meditation = form.meditation.data
-        sleep = form.sleep.data
+        new_data = HealthData(
+            date=form.date.data,
+            exercise=form.exercise.data,
+            meditation=form.meditation.data,
+            sleep=form.sleep.data
+        )
+        db.session.add(new_data)
+        db.session.commit()
         # Redirect to the dashboard
         return redirect(url_for('dashboard'))
     return render_template('form.html', form=form)
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    all_data = HealthData.query.all()
+    return render_template('dashboard.html', data=all_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

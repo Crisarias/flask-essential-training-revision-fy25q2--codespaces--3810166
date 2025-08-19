@@ -39,11 +39,27 @@ def success():
     email = request.args.get('email')
     return render_template('success.html', username=username, email=email)
 
-@app.route('/users')
+@app.route('/users', methods=('GET', 'POST'))
 def users():
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        new_email = request.form.get('new_email')
+        user_to_update = User.query.get(user_id)
+        if user_to_update:
+            user_to_update.email = new_email
+            db.session.commit()
+        return redirect(url_for('users'))
     #retrieve all records from the User table in the db
     all_users = User.query.all()
     return render_template('users.html', users=all_users)
+
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    user_to_delete = User.query.get(user_id)
+    if user_to_delete:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+    return redirect(url_for('users'))
 
 if __name__ == '__main__':
     app.run(debug=True)

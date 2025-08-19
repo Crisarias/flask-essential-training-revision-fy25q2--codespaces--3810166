@@ -1,14 +1,18 @@
 <!doctype html>
 <html>
+
 <head>
     <title>Flask Forms</title>
 </head>
+
 <body>
     <h1>Enter Your Name</h1>
     <form method="POST">
         {{ form.hidden_tag() }}
         {{ form.username.label }} {{ form.username(size=20) }}
+        {{ form.username.email }} {{ form.email(size=100) }}
         {{ form.submit() }}
-      </form>
+    </form>
 </body>
+
 </html>
